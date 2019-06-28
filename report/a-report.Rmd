@@ -22,16 +22,11 @@ theme_set(theme_bw())
 ```
 
 ```{r read}
-atividade = read_projectdata()
+apps = read_csv(here::here("data/googleplaystore.csv"))
 
-atividade = atividade %>% 
-  filter(seguidores > 0, n_proprio > 0, n_retweet > 0)
-
-atividade = atividade  %>% 
-  filter(!is.na(twitter) & !is.na(segue)) %>% 
-  mutate(tuitou = !is.na(twitter) & (n_proprio + n_retweet > 0))
-
-atividade = atividade %>% filter(!is.na(twitter))
+apps = apps %>% 
+  filter(Price != "Free" & Price != "0") %>% 
+  mutate(double_price = extract_numeric(Price))
 ```
 
 # 1. Qual a relação entre as características da atuação do parlamentar e o engajamento total que ele obtém no twitter? 
