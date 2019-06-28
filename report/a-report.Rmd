@@ -26,7 +26,8 @@ apps = read_csv(here::here("data/googleplaystore.csv"))
 
 apps = apps %>% 
   filter(Price != "Free" & Price != "0") %>% 
-  mutate(double_price = extract_numeric(Price))
+  mutate(double_price = extract_numeric(Price)) %>% 
+  filter(!is.na(Rating))
 ```
 
 # 1. Qual a relação entre as características da atuação do parlamentar e o engajamento total que ele obtém no twitter? 
