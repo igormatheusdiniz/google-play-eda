@@ -95,6 +95,8 @@ apps %>%
   geom_quasirandom(size = 2, alpha = .7, colour = "orange")
 ```
 
+Como estamos trabalhando com uma grande quantidade de dados, e escalas bastante diferentes é comum que os dados não apresentem em um primeiro momento uma informação útil. Para isso trasnsformamos a visualização para log.
+
 ```{r}
 apps %>% 
   ggplot(aes(x = Rating, y = double_price)) + 
@@ -102,7 +104,9 @@ apps %>%
   scale_x_log10() +
   scale_y_log10()
 ```
+
 ## Criando o modelo
+
 ```{r}
 apps = apps %>% 
   mutate(double_price_log = log10(double_price))
@@ -123,6 +127,7 @@ apps %>%
   scale_x_log10() +
   scale_y_log10()
 ```
+
 ## Conclusao
 
-
+Regressão linear múltipla foi utilizada para analisar a associação entre número de reviews do aplicativo, preço do aplicativo e Avaliação. Os resultados da regressão indicam que um modelo no formato log(Rating) = 0,011.log(reviews) - 0,006.log(price), explicando apenas 3,8% da variância da variável de resposta (R2=0,038). Podemos perceber que pelo modelo resultante nenhuma das variáveis tem um impacto na variável Rating. Um fator a ser considerado é que o que foi fornecido é um modelo linear, e de fato a concentração dos pontos, não se assemelha a uma relação linear, assemelha-se mais para uma relação exponencial.
