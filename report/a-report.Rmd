@@ -1,6 +1,6 @@
 ---
-title: "Estudo das relações das caractéristicas de um Parlamentar no Twitter"
-author: "Igor Matheus Castor Diniz Pinheiro"
+title: "Estudo das relações de algumas variáveis referentes aos aplicativos da Google Play"
+author: "Igor Matheus Castor Diniz Pinheiro e Alice Silva Fernandes"
 output:
     html_document:
       df_print: paged
@@ -26,18 +26,31 @@ options(scipen = 999)
 theme_set(theme_bw())
 ```
 
+# Tratamento dos dados
+
+Antes de começarmos uma análise com os referente a aplicativos na Google Play, vamos tratar os dados e o recorte que queremos analisar. A seguir explicaremos algumas decisões que foram tomadas.
+
+* Apenas aplicativos pagos: optou-se pelo recorte de apenas aplicativos pagos para enteder um pouco sobre as relações dos preços dos aplicativos e as outras variáveis.
+* Tratamento do preço: A coluna de preços estava no formato de String, capturou-se apenas os valores númericos dessa String
+* Estudo da relação do tamanho com outras variáveis: Estudou-se também qual seria a relação do tamanho com as outras variáveis
+* Retirando NAs das avaliações: alguns aplicativos estavam com avaliação Nula, optamos por tirá-los de nosso data set
+* Alguns Outliers: Reviews e Price possuiam alguns outliers, pontos fora do padrão de valores comuns, optou-se por retirá-los para que não houvesse um dano ou um desvio no estudo em questão.
+
 ```{r read}
 apps = read_csv(here::here("data/googleplaystore.csv"))
 
 apps = apps %>% 
-  filter(Price != "Free" & Price != "0") %>% 
-  mutate(double_price = extract_numeric(Price)) %>% 
-  filter(!is.na(Rating))
+  filter(Price != "Free" & Price != "0" & Size!="Varies with device") %>% 
+  mutate(double_price = extract_numeric(Price)) %>%
+  mutate(size = extract_numeric(Size)) %>% 
+  filter(!is.na(Rating)) %>% 
+  filter(Reviews <= 100000) %>% 
+  filter(double_price < 100)
 
 apps
 ```
 
-# 1. Qual a relação entre a avaliação e o número de reviews dos aplicativos da Google Play?
+# 1. Qual a relação entre a avaliação e o número de reviews dos aplicativos pagos da Google Play?
 
 ```{r}
 apps %>% 
@@ -73,3 +86,43 @@ glance(modelo)
 ```
 
 ## Conclusão
+
+# 2. Qual a relação entre a avaliação e o número de reviews e o preço dos aplicativos pagos da Google Play?
+
+```{r}
+apps %>% 
+  ggplot(aes(x = Rating, y = double_price)) +
+  geom_quasirandom(size = 2, alpha = .7, colour = "orange")
+```
+
+```{r}
+apps %>% 
+  ggplot(aes(x = Rating, y = double_price)) + 
+  geom_quasirandom(size = 2, alpha = .7, colour = "orange") +
+  scale_x_log10() +
+  scale_y_log10()
+```
+## Criando o modelo
+```{r}
+apps = apps %>% 
+  mutate(double_price_log = log10(double_price))
+```
+
+```{r}
+modelo = lm(rating_log ~ reviews_log + double_price_log, 
+   data = apps)
+
+tidy(modelo)
+glance(modelo)
+```
+
+```{r}
+apps %>% 
+  ggplot(aes(x = Rating, y = size)) + 
+  geom_quasirandom(size = 2, alpha = .7, colour = "orange") +
+  scale_x_log10() +
+  scale_y_log10()
+```
+## Conclusao
+
+
