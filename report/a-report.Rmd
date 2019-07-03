@@ -58,6 +58,8 @@ apps %>%
   geom_quasirandom(size = 2, alpha = .7, colour = "orange")
 ```
 
+Como estamos trabalhando com uma grande quantidade de dados, e escalas bastante diferentes é comum que os dados não apresentem em um primeiro momento uma informação útil. Para isso trasnsformamos a visualização para log.
+
 ```{r}
 apps %>% 
   ggplot(aes(x = Rating, y = Reviews)) + 
@@ -65,7 +67,6 @@ apps %>%
   scale_x_log10() +
   scale_y_log10()
 ```
-
 
 
 ## Criando o modelo
@@ -86,6 +87,8 @@ glance(modelo)
 ```
 
 ## Conclusão
+
+Foi utilizada regressão linear para analisar a associação entre a avaliação e o número de reviews. Os resultados da regressão indicam que um modelo no formato **log(Rating) = 0,011.log(reviews) + 0,598**, explicando apenas **3,6%** da variância da variável de independente (R2=0,036). Podemos perceber pelo modelo resultante que o número de reviews não tem impacto sobre a avaliação. Pela visualação é possível ver que existe uma grande concentração de aplicativos com nota entre 4 e 5, mas com número de reviews variando entre 10 e 100000.
 
 # 2. Qual a relação entre a avaliação e o número de reviews e o preço dos aplicativos pagos da Google Play?
 
@@ -130,4 +133,4 @@ apps %>%
 
 ## Conclusao
 
-Regressão linear múltipla foi utilizada para analisar a associação entre número de reviews do aplicativo, preço do aplicativo e Avaliação. Os resultados da regressão indicam que um modelo no formato log(Rating) = 0,011.log(reviews) - 0,006.log(price), explicando apenas 3,8% da variância da variável de resposta (R2=0,038). Podemos perceber que pelo modelo resultante nenhuma das variáveis tem um impacto na variável Rating. Um fator a ser considerado é que o que foi fornecido é um modelo linear, e de fato a concentração dos pontos, não se assemelha a uma relação linear, assemelha-se mais para uma relação exponencial.
+Regressão linear múltipla foi utilizada para analisar a associação entre número de reviews do aplicativo, preço do aplicativo e Avaliação. Os resultados da regressão indicam que um modelo no formato **log(Rating) = 0,011.log(reviews) - 0,006.log(price) + 0,60**, explicando apenas **3,8%** da variância da variável de resposta (R2=0,038). Podemos perceber que pelo modelo resultante nenhuma das variáveis tem um impacto na variável Rating. Um fator a ser considerado é que o que foi fornecido é um modelo linear, e de fato a concentração dos pontos, não se assemelha a uma relação linear, assemelha-se mais para uma relação exponencial.
